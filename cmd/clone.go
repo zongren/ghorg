@@ -289,6 +289,7 @@ func setupRepoClone() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	colorlog.PrintInfo("test000")
 
 	if len(cloneTargets) == 0 {
 		colorlog.PrintInfo("No repos found for " + os.Getenv("GHORG_SCM_TYPE") + " " + os.Getenv("GHORG_CLONE_TYPE") + ": " + targetCloneSource + ", please verify you have sufficient permissions to clone target repos, double check spelling and try again.")

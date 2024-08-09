@@ -346,6 +346,7 @@ func (c Gitlab) GetGroupRepos(targetGroup string) ([]Repo, error) {
 			PerPage: perPage,
 			Page:    1,
 		},
+		Archived: gitlab.Bool(true),
 		IncludeSubGroups: gitlab.Bool(true),
 	}
 
@@ -385,9 +386,9 @@ func (c Gitlab) GetUserRepos(targetUsername string) ([]Repo, error) {
 			PerPage: perPage,
 			Page:    1,
 		},
-		Archived: true,
-		IncludeHidden: true,
-		IncludePendingDelete: true,
+		Archived: gitlab.Bool(true),
+		IncludeHidden: gitlab.Bool(true),
+		IncludePendingDelete: gitlab.Bool(true),
 	}
 
 	userOpts := &gitlab.ListUsersOptions{
@@ -420,10 +421,12 @@ func (c Gitlab) GetUserRepos(targetUsername string) ([]Repo, error) {
 		targetUsers = append(targetUsers, targetUsername)
 	}
 
+	colorlog.PrintError("test1")
 	for _, targetUser := range targetUsers {
 		for {
 			// Get the first page with projects.
-			ps, resp, err := c.Projects.ListUserProjects(targetUser, projectOpts)
+			colorlog.PrintError("test2")
+			ps, resp, err := c.Projects.ListProjects(projectOpts)
 			if err != nil {
 				fmt.Printf("Error getting repo for user: %v", targetUser)
 				colorlog.PrintError(fmt.Sprintf("Error getting repo for user: %v", targetUser))
@@ -498,21 +501,21 @@ func (c Gitlab) filter(group string, ps []*gitlab.Project) []Repo {
 
 	for _, p := range ps {
 
-		if os.Getenv("GHORG_SKIP_ARCHIVED") == "true" {
-			if p.Archived {
-				continue
-			}
-		}
+		// if os.Getenv("GHORG_SKIP_ARCHIVED") == "true" {
+		// 	if p.Archived {
+		// 		continue
+		// 	}
+		// }
 
-		if os.Getenv("GHORG_SKIP_FORKS") == "true" {
-			if p.ForkedFromProject != nil {
-				continue
-			}
-		}
+		// if os.Getenv("GHORG_SKIP_FORKS") == "true" {
+		// 	if p.ForkedFromProject != nil {
+		// 		continue
+		// 	}
+		// }
 
-		if !hasMatchingTopic(p.Topics) {
-			continue
-		}
+		// if !hasMatchingTopic(p.Topics) {
+		// 	continue
+		// }
 
 		r := Repo{}
 
