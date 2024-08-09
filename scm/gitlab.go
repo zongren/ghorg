@@ -385,7 +385,9 @@ func (c Gitlab) GetUserRepos(targetUsername string) ([]Repo, error) {
 			PerPage: perPage,
 			Page:    1,
 		},
-		Archived: true
+		Archived: true,
+		IncludeHidden: true,
+		IncludePendingDelete: true,
 	}
 
 	userOpts := &gitlab.ListUsersOptions{
